@@ -1,15 +1,34 @@
 return {
-    'rose-pine/neovim',
-    name = 'rose-pine',
-    lazy = false,  -- make sure we load this during startup if it is your main colorscheme
-    priority = 1000, -- make sure to load this before all the other start plugins
-    config = function()
-        require('rose-pine').setup({
-            disable_background = true,
-        })
-        vim.cmd("colorscheme rose-pine")
-    end
+  "folke/tokyonight.nvim",
+  lazy = false,
+  priority = 1000,
+  opts = {},
+  config = function()
+      require('tokyonight').setup({
+          style = "night",
+      })
+      vim.cmd[[colorscheme tokyonight]]
+  end
 }
+
+-- return {
+--     'rose-pine/neovim',
+--     name = 'rose-pine',
+--     lazy = false,    -- make sure we load this during startup if it is your main colorscheme
+--     priority = 1000, -- make sure to load this before all the other start plugins
+--     config = function()
+--         -- require('rose-pine').setup({
+--         --     variant = 'main',
+--         --     dark_variant = "main",
+--         --     disable_background = true,
+--         --     highlight_groups = {
+--         --         CursorLine = { bg = 'foam', blend = 10 },
+--         --     }
+--         -- })
+--         vim.cmd('colorscheme rose-pine')
+--     end
+-- }
+
 -- return {
 --     'navarasu/onedark.nvim',
 --     lazy = false,    -- make sure we load this during startup if it is your main colorscheme
