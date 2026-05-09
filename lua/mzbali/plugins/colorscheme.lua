@@ -1,60 +1,85 @@
-return {
-  "folke/tokyonight.nvim",
-  lazy = false,
-  priority = 1000,
-  opts = {},
-  config = function()
-      require('tokyonight').setup({
-          style = "night",
-      })
-      vim.cmd[[colorscheme tokyonight]]
-  end
+local active = "catppuccin" -- "catppuccin" | "tokyonight" | "rose-pine" | "github"
+
+local themes = {
+    catppuccin = {
+        plugin = "catppuccin/nvim",
+        name   = "catppuccin",
+        setup  = function()
+            require("catppuccin").setup({
+                flavour = "mocha", -- latte | frappe | macchiato | mocha
+                transparent_background = true,
+                integrations = {
+                    treesitter = true,
+                    telescope  = { enabled = true },
+                    native_lsp = {
+                        enabled      = true,
+                        virtual_text = {
+                            errors      = { "italic" },
+                            hints       = { "italic" },
+                            warnings    = { "italic" },
+                            information = { "italic" },
+                        },
+                        underlines   = {
+                            errors      = { "underline" },
+                            hints       = { "underline" },
+                            warnings    = { "underline" },
+                            information = { "underline" },
+                        },
+                    },
+                    harpoon    = true,
+                    gitsigns   = true,
+                    mason      = true,
+                    trouble    = true,
+                },
+            })
+        end,
+    },
+    tokyonight = {
+        plugin = "folke/tokyonight.nvim",
+        setup  = function()
+            require("tokyonight").setup({
+                style = "night", -- storm | night | moon | day
+                integrations = {
+                    -- tokyonight auto-integrates most plugins
+                    -- override highlights here if needed
+                },
+            })
+        end,
+    },
+    ["rose-pine"] = {
+        plugin = "rose-pine/neovim",
+        name   = "rose-pine",
+        setup  = function()
+            require("rose-pine").setup({
+                variant = "moon", -- auto | main | moon | dawn
+                highlight_groups = {
+                    -- override specific highlights here
+                    -- e.g. CursorLine = { bg = "foam", blend = 10 }
+                },
+            })
+        end,
+    },
+    github = {
+        plugin      = "projekt0n/github-nvim-theme",
+        colorscheme = "github_dark_dimmed",
+        setup       = function()
+            require("github-theme").setup({
+                options = {
+                    transparent = true,
+                },
+            })
+        end,
+    },
 }
 
--- return {
---     'rose-pine/neovim',
---     name = 'rose-pine',
---     lazy = false,    -- make sure we load this during startup if it is your main colorscheme
---     priority = 1000, -- make sure to load this before all the other start plugins
---     config = function()
---         -- require('rose-pine').setup({
---         --     variant = 'main',
---         --     dark_variant = "main",
---         --     disable_background = true,
---         --     highlight_groups = {
---         --         CursorLine = { bg = 'foam', blend = 10 },
---         --     }
---         -- })
---         vim.cmd('colorscheme rose-pine')
---     end
--- }
-
--- return {
---     'navarasu/onedark.nvim',
---     lazy = false,    -- make sure we load this during startup if it is your main colorscheme
---     priority = 1000, -- make sure to load this before all the other start plugins
---     config = function()
---         require('onedark').setup({
---             transparent = true,
---             style = 'darker'
---         })
---         vim.cmd("colorscheme onedark")
---     end
--- }
-
--- return{
---   'projekt0n/github-nvim-theme',
---   lazy = false, -- make sure we load this during startup if it is your main colorscheme
---   priority = 1000, -- make sure to load this before all the other start plugins
---   config = function()
---     require('github-theme').setup({
---         option = {
---             theme_style = 'dimmed',
---             transparent = true,
---         }
--- })
---
---     vim.cmd('colorscheme github_dark_dimmed')
---   end,
--- }
---
+local t = themes[active]
+return {
+    t.plugin,
+    name     = t.name,
+    lazy     = false,
+    priority = 1000,
+    config   = function()
+        t.setup()
+        vim.cmd("colorscheme " .. (t.colorscheme or active))
+    end,
+}
