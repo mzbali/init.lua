@@ -5,6 +5,8 @@ return {
         dependencies = {
             "nvim-treesitter/nvim-treesitter",
             "nvim-tree/nvim-web-devicons",
+            "3rd/image.nvim",
+
         },
         opts = {
             completions = { lsp = { enabled = true } },
