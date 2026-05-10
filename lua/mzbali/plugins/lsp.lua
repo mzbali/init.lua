@@ -1,18 +1,3 @@
-local on_attach = function(_, bufnr)
-    local opts = { buffer = bufnr, remap = false }
-    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-    vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-    vim.keymap.set("n", "<leader>vws", vim.lsp.buf.workspace_symbol, opts)
-    vim.keymap.set("n", "<leader>vd", vim.diagnostic.open_float, opts)
-    vim.keymap.set("n", "[d", function() vim.diagnostic.jump({ count = 1 }) end, opts)
-    vim.keymap.set("n", "]d", function() vim.diagnostic.jump({ count = -1 }) end, opts)
-    vim.keymap.set("n", "<leader>vca", vim.lsp.buf.code_action, opts)
-    vim.keymap.set("n", "<leader>vrr", vim.lsp.buf.references, opts)
-    vim.keymap.set("n", "<leader>vrn", vim.lsp.buf.rename, opts)
-    vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, opts)
-    vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
-end
-
 return {
     {
         "williamboman/mason.nvim",
@@ -50,7 +35,6 @@ return {
 
             -- Lua specific config
             vim.lsp.config("lua_ls", {
-                on_attach = on_attach,
                 capabilities = capabilities,
                 settings = {
                     Lua = {
@@ -63,6 +47,23 @@ return {
             })
             vim.lsp.enable("lua_ls")
 
+            -- Roslyn specific config
+            vim.lsp.config("roslyn", {
+                capabilities = require("cmp_nvim_lsp").default_capabilities(),
+                settings = {
+                    ["csharp|inlay_hints"] = {
+                        csharp_enable_inlay_hints_for_implicit_object_creation = true,
+                        csharp_enable_inlay_hints_for_implicit_variable_types = true,
+                    },
+                    ["csharp|code_lens"] = {
+                        dotnet_enable_references_code_lens = true,
+                    },
+                    ["csharp|completion"] = {
+                        dotnet_show_completion_items_from_unimported_namespaces = true,
+                    },
+                },
+            })
+
             -- Standard servers loop
             local servers = {
                 "pyright", "bashls", "dockerls", "docker_compose_language_service",
@@ -70,37 +71,19 @@ return {
             }
 
             for _, server in ipairs(servers) do
-                vim.lsp.config(server, {
-                    on_attach = on_attach,
-                    capabilities = capabilities,
-                })
-                vim.lsp.enable(server)
+                vim.lsp.config(server, { capabilities = capabilities })
             end
+            vim.lsp.enable(servers)
         end
     },
     {
         "seblyng/roslyn.nvim",
         ft = "cs",
-        config = function()
-            require("roslyn").setup({
-                broad_search = true,
-                config = {
-                    on_attach = on_attach, -- Using the global function from the top
-                    capabilities = require("cmp_nvim_lsp").default_capabilities(),
-                    settings = {
-                        ["csharp|inlay_hints"] = {
-                            csharp_enable_inlay_hints_for_implicit_object_creation = true,
-                            csharp_enable_inlay_hints_for_implicit_variable_types = true,
-                        },
-                        ["csharp|code_lens"] = {
-                            dotnet_enable_references_code_lens = true,
-                        },
-                        ["csharp|completion"] = {
-                            dotnet_show_completion_items_from_unimported_namespaces = true,
-                        },
-                    },
-                },
-            })
+        opts = {
+            broad_search = true,
+        },
+        config = function(_, opts)
+            require("roslyn").setup(opts)
         end,
     },
     {
