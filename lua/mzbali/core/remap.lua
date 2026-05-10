@@ -63,6 +63,8 @@ end, {
     silent = true,
 })
 
+-- Lazy sync
+vim.keymap.set("n", "<leader><leader>", "<cmd>Lazy sync<CR>")
+
 -- Oil nvim config
 vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
-vim.keymap.set("n", "<leader><leader>", "<CMD>Oil<CR>", { desc = "Open parent directory" })
