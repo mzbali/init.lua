@@ -32,7 +32,6 @@ return {
             -- dashboard.button("e", "New file", "<cmd>ene <CR>"),
             -- dashboard.button("SPC s f", "Find file"),
             -- dashboard.button("SPC s o", "Recently opened files"),
-            dashboard.button("-", "Oil - file explorer", "<cmd>Oil<CR>"),
             dashboard.button("<leader>pv", "Oil - file explorer", "<cmd>Oil<CR>"),
             dashboard.button("<leader>pf", "Find file", "<cmd>Telescope find_files<CR>"),
             dashboard.button("<C-p>", "Git files", "<cmd>Telescope git_files<CR>"),
